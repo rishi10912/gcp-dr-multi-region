@@ -1,5 +1,6 @@
 terraform {
-  backend "local" {
-    path = "terraform.tfstate"
+  backend "gcs" {
+    bucket  = "copper-frame-479111-q5-tf-state"
+    prefix = "dr/dev"
   }
 }

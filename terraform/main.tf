@@ -28,3 +28,23 @@ module "cloudrun" {
   region       = var.region
   project      = var.gcp_project
 }
+
+module "backup_bucket" {
+  source      = "./modules/gcs-backup"
+  bucket_name = "${var.gcp_project}-sql-backups"
+  location    = var.region
+}
+
+
+module "cloudsql" {
+  source        = "./modules/cloudsql"
+  instance_name = "gcp-dr-sql-dev"
+  db_name       = "appdb"
+  region        = var.region
+  tier          = "db-custom-1-3840"
+  vpc_id        = module.network.vpc_id
+
+  depends_on = [
+    module.network
+  ]
+}

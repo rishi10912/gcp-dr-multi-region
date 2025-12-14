@@ -21,13 +21,15 @@ module "iam" {
 }
 
 
-module "cloudrun" {
-  source       = "./modules/cloudrun"
+module "cloudrun_service" {
+  source = "./modules/cloudrun"
+
   service_name = "gcp-dr-demo-${local.env}"
   image        = "gcr.io/${var.gcp_project}/gcp-dr-demo:day1"
   region       = var.region
   project      = var.gcp_project
 }
+
 
 module "backup_bucket" {
   source      = "./modules/gcs-backup"
@@ -47,4 +49,32 @@ module "cloudsql" {
   depends_on = [
     module.network
   ]
+}
+
+module "backup_replica" {
+  source              = "./modules/gcs-replica"
+  source_bucket       = module.backup_bucket.bucket_name
+  replica_bucket_name = "${var.gcp_project}-sql-backups-replica"
+  replica_location    = "us-east1"
+}
+
+
+module "sql_export_job" {
+  source = "./modules/cloudrun-job"
+
+  name         = "sql-export-job"
+  region       = var.region
+  image        = "google/cloud-sdk:slim"
+  project      = var.gcp_project
+  scheduler_sa = module.iam.service_account_email
+}
+module "sql_export_scheduler" {
+  source = "./modules/scheduler"
+
+  name      = "sql-export-nightly"
+  schedule  = "0 2 * * *"
+  time_zone = "UTC"
+
+  target_uri   = "https://us-central1-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/copper-frame-479111-q5/jobs/sql-export-job:run"
+  scheduler_sa = module.iam.service_account_email
 }

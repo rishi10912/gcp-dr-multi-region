@@ -28,7 +28,6 @@ The application runs in a serverless environment on Google Cloud and uses a mana
 
 ## Logical Architecture Diagram 
 
-
                           ┌──────────────────────────┐
                           │        End Users          │
                           └─────────────┬────────────┘
@@ -145,3 +144,4 @@ This provides a clear and tested recovery path.
 
 This document intentionally avoids low-level commands and focuses on architectural intent.  
 Detailed setup and deployment steps are available in separate documentation for engineers who want to reproduce the environment.
+

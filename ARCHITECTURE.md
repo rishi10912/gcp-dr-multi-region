@@ -29,47 +29,47 @@ The application runs in a serverless environment on Google Cloud and uses a mana
 ## Logical Architecture Diagram 
 
                           ┌──────────────────────────┐
-                          │        End Users          │
+                          │        End Users         │
                           └─────────────┬────────────┘
                                         │
                                         ▼
                           ┌──────────────────────────┐
-                          │   Global Load Routing     │
+                          │   Global Load Routing    │
                           │ (Traffic Distribution)   │
                           └─────────────┬────────────┘
                                         │
                                         ▼
                           ┌──────────────────────────┐
-                          │   Serverless Application  │
-                          │      (Cloud Run)          │
+                          │   Serverless Application │
+                          │      (Cloud Run)         │
                           └─────────────┬────────────┘
                                         │
                                         ▼
             ┌────────────────────────────────────────────────┐
-            │        Managed PostgreSQL Database               │
-            │           (High Availability)                   │
+            │        Managed PostgreSQL Database             │
+            │           (High Availability)                  │
             └───────────────────┬────────────────────────────┘
                                 │
                                 │  Automated Export
                                 │
-    ┌───────────────────────────▼───────────────────────────┐
-    │                Scheduled Backup Workflow                │
-    │                                                         │
+    ┌───────────────────────────▼──────────────────────────┐
+    │                Scheduled Backup Workflow             │
+    │                                                      │
     │   ┌───────────────┐        ┌───────────────────────┐ │
     │   │   Scheduler   │ ─────▶ │  Background Job       │ │
     │   │ (Time-based)  │        │  (Containerized Task) │ │
     │   └───────────────┘        └───────────┬───────────┘ │
-    │                                        │               │
-    │                                        ▼               │
+    │                                        │             │
+    │                                        ▼             │
     │                        ┌───────────────────────────┐ │
-    │                        │   Database Export Process  │ │
+    │                        │   Database Export Process │ │
     │                        └───────────┬───────────────┘ │
     └────────────────────────────────────┼─────────────────┘
                                          │
                                          ▼
                           ┌──────────────────────────┐
-                          │    Secure Cloud Storage   │
-                          │   (Database Backups)      │
+                          │    Secure Cloud Storage  │
+                          │   (Database Backups)     │
                           └──────────────────────────┘
 
 ---
